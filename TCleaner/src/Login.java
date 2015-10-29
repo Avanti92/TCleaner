@@ -88,7 +88,7 @@ public class Login {
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				try {
-					String query="select * from sql_table where username=? and password=?";
+					String query="select * from localsql where username=? and password=?";
 					PreparedStatement pst = connection.prepareStatement(query);
 					pst.setString(1, textFieldUsername.getText());
 					pst.setString(2, passwordField.getText());
