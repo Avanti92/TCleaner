@@ -61,12 +61,12 @@ public class Main {
 		btnMainClearCache.setBounds(10, 115, 170, 30);
 		TClear.getContentPane().add(btnMainClearCache);
 		
-		JButton btnMainEditProjects = new JButton("Edit Projects");
+		JButton btnMainEditProjects = new JButton("Configure Projects");
 		btnMainEditProjects.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				
-				EditProjects editProj=new EditProjects();
-				editProj.setVisible(true);
+				ConfProjects confProj=new ConfProjects();
+				confProj.setVisible(true);
 				
 			}
 		});
