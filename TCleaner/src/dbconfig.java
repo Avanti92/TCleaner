@@ -12,7 +12,7 @@ public class dbconfig {
 			
 			Class.forName("org.sqlite.JDBC");
 			Connection conn=DriverManager.getConnection("jdbc:sqlite:C:\\Users\\Yannik\\Desktop\\DatebaseAccess.sqlite");
-			JOptionPane.showMessageDialog(null, "DB Connection successful");
+//			JOptionPane.showMessageDialog(null, "DB Connection successful");
 			return conn;
 			
 		} catch (Exception e) {

@@ -33,7 +33,7 @@ public class EditProject extends JFrame {
 		});
 	}
 	
-	Connection connection = null;
+	Connection connection;
 	private JTextField textFieldEditProjectName;
 	private JTextField textFieldEditProjectServer;
 	private JTextField textFieldEditProjectDatebase;
@@ -44,7 +44,8 @@ public class EditProject extends JFrame {
 	 * Create the frame.
 	 */
 	public EditProject() {
-		dbconfig.dbConnection();
+		connection=dbconfig.dbConnection();
+		
 		setResizable(false);		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 406, 335);

@@ -37,7 +37,7 @@ public class NewProject extends JFrame {
 		});
 	}
 	
-	Connection connection = null;
+	Connection connection;
 	private JTextField textFieldNewProjectName;
 	private JTextField textFieldNewProjectServer;
 	private JTextField textFieldNewProjectDatebase;
@@ -50,7 +50,8 @@ public class NewProject extends JFrame {
 	 * Create the frame.
 	 */
 	public NewProject() {
-		dbconfig.dbConnection();
+		connection=dbconfig.dbConnection();
+		
 		setResizable(false);		
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setBounds(100, 100, 406, 335);
@@ -110,28 +111,31 @@ public class NewProject extends JFrame {
 		contentPane.add(lblNewProjectPassword);
 		
 		JButton btnNewProjectSave = new JButton("Save");
-//		btnNewProjectSave.addActionListener(new ActionListener() {
-//			public void actionPerformed(ActionEvent e) {
-//				try {
-//					String query="insert into datebases (Project,Server,Datebase,Username,Password) values (?,?,?,?)";
-//					PreparedStatement pst=connection.prepareStatement(query);
-//					pst.setString(1,textFieldNewProjectName.getText() );
-//					pst.setString(2,textFieldNewProjectServer.getText() );
-//					pst.setString(3,textFieldNewProjectDatebase.getText() );
-//					pst.setString(4,textFieldNewProjectUsername.getText() );
-//					
-//					pst.execute();
-//					
-//					JOptionPane.showMessageDialog(null, "Data has been saved.");
-//					pst.close();
-//					
-//					
-//					
-//				} catch (Exception e2) {
-//					JOptionPane.showMessageDialog(null, e2);
-//				}
-//			}
-//		});
+		btnNewProjectSave.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				try {
+					String query="insert into datebases (Project,Server,Datebase,Username,Password) values (?,?,?,?,?)";
+					PreparedStatement pst=connection.prepareStatement(query);
+					pst.setString(1,textFieldNewProjectName.getText() );
+					pst.setString(2,textFieldNewProjectServer.getText() );
+					pst.setString(3,textFieldNewProjectDatebase.getText() );
+					pst.setString(4,textFieldNewProjectUsername.getText() );
+					pst.setString(5,passwordFieldNewProject.getText() );
+					
+					pst.execute();
+					pst.close();
+					
+					JOptionPane.showMessageDialog(null, "Added new entry.");
+	
+					dispose();
+					
+					
+					
+				} catch (Exception e2) {
+					JOptionPane.showMessageDialog(null, e2);
+				}
+			}
+		});
 		btnNewProjectSave.setBounds(20, 250, 175, 30);
 		contentPane.add(btnNewProjectSave);
 		
