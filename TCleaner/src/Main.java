@@ -1,6 +1,10 @@
 import java.awt.EventQueue;
 
 import javax.swing.*;
+
+import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
+import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
@@ -41,6 +45,13 @@ public class Main {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+//		UIManager.put("Synthetica.table.useSynthHeaderRenderer", Boolean.TRUE);
+		try {
+//			UIManager.setLookAndFeel(SyntheticaAluOxideLookAndFeel.class.getName());
+			UIManager.setLookAndFeel(SyntheticaBlackEyeLookAndFeel.class.getName());
+		} catch (Exception lf) {
+			lf.printStackTrace();
+		}
 		TClear = new JFrame();
 		TClear.setResizable(false);
 		TClear.setTitle("TClear");
