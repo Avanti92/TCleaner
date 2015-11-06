@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import de.javasoft.plaf.synthetica.SyntheticaAluOxideLookAndFeel;
 import de.javasoft.plaf.synthetica.SyntheticaBlackEyeLookAndFeel;
+import net.proteanit.sql.DbUtils;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -13,6 +14,8 @@ import java.sql.*;
 public class Main {
 
 	private JFrame TClear;
+	
+	private JList listMain;
 
 	/**
 	 * Launch the application.
@@ -30,12 +33,37 @@ public class Main {
 		});
 	}
 	
-	Connection connection=null;
-	
+	Connection connection;
 
+	
 	/**
 	 * Create the application.
 	 */
+	
+	public void loadtList(){
+		try {
+			
+			String query="select * from datebases";
+			PreparedStatement pst=connection.prepareStatement(query);
+			ResultSet rs=pst.executeQuery();
+			
+			
+			DefaultListModel DLM=new DefaultListModel();
+			while(rs.next()){
+				DLM.addElement(rs.getString("Project"));
+			}
+			
+			listMain.setModel(DLM);
+			
+			pst.close();
+			rs.close();
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public Main() {
 		initialize();
 		connection=dbconfig.dbConnection();
@@ -59,11 +87,6 @@ public class Main {
 		TClear.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		TClear.getContentPane().setLayout(null);
 		
-		JList listMainProjects = new JList();
-		listMainProjects.setToolTipText("Projects");
-		listMainProjects.setBounds(190, 10, 200, 280);
-		TClear.getContentPane().add(listMainProjects);
-		
 		JButton btnMainClearCache = new JButton("Clear Cache");
 		btnMainClearCache.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -84,11 +107,14 @@ public class Main {
 		btnMainEditProjects.setBounds(10, 155, 170, 30);
 		TClear.getContentPane().add(btnMainEditProjects);
 		
-		JLabel lblMainBackground = new JLabel("");
-		lblMainBackground.setBounds(0, 0, 410, 310);
-		TClear.getContentPane().add(lblMainBackground);
-		
+		listMain.setBounds(230, 36, 170, 263);
+		TClear.getContentPane().add(listMain);
+				
 		JMenuBar menuBarMain = new JMenuBar();
 		TClear.setJMenuBar(menuBarMain);
+		
+		loadtList();
+		
+		
 	}
 }
