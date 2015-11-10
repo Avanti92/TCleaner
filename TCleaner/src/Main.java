@@ -15,8 +15,6 @@ public class Main {
 
 	private JFrame TClear;
 	
-	private JList listMain;
-
 	/**
 	 * Launch the application.
 	 */
@@ -35,34 +33,33 @@ public class Main {
 	
 	Connection connection;
 
-	
 	/**
 	 * Create the application.
 	 */
 	
-	public void loadtList(){
-		try {
-			
-			String query="select * from datebases";
-			PreparedStatement pst=connection.prepareStatement(query);
-			ResultSet rs=pst.executeQuery();
-			
-			
-			DefaultListModel DLM=new DefaultListModel();
-			while(rs.next()){
-				DLM.addElement(rs.getString("Project"));
-			}
-			
-			listMain.setModel(DLM);
-			
-			pst.close();
-			rs.close();
-
-			
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
+//	public void loadtList(){
+//		try {
+//			
+//			String query="select * from datebases";
+//			PreparedStatement pst=connection.prepareStatement(query);
+//			ResultSet rs=pst.executeQuery();
+//			
+//			
+//			DefaultListModel DLM=new DefaultListModel();
+//			while(rs.next()){
+//				DLM.addElement(rs.getString("Project"));
+//			}
+//			
+//			listMain.setModel(DLM);
+//			
+//			pst.close();
+//			rs.close();
+//
+//			
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//	}
 	
 	public Main() {
 		initialize();
@@ -107,13 +104,14 @@ public class Main {
 		btnMainEditProjects.setBounds(10, 155, 170, 30);
 		TClear.getContentPane().add(btnMainEditProjects);
 		
-		listMain.setBounds(230, 36, 170, 263);
+		JList listMain = new JList();
+		listMain.setBounds(205, 11, 195, 288);
 		TClear.getContentPane().add(listMain);
-				
+		
 		JMenuBar menuBarMain = new JMenuBar();
 		TClear.setJMenuBar(menuBarMain);
 		
-		loadtList();
+//		loadtList();
 		
 		
 	}
