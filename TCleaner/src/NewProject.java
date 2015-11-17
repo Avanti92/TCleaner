@@ -113,26 +113,29 @@ public class NewProject extends JFrame {
 		JButton btnNewProjectSave = new JButton("Save");
 		btnNewProjectSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				try {
-					String query="insert into datebases (Project,Server,Datebase,Username,Password) values (?,?,?,?,?)";
-					PreparedStatement pst=connection.prepareStatement(query);
-					pst.setString(1,textFieldNewProjectName.getText() );
-					pst.setString(2,textFieldNewProjectServer.getText() );
-					pst.setString(3,textFieldNewProjectDatebase.getText() );
-					pst.setString(4,textFieldNewProjectUsername.getText() );
-					pst.setString(5,passwordFieldNewProject.getText() );
-					
-					pst.execute();
-					pst.close();
-					
-					JOptionPane.showMessageDialog(null, "Added new entry.");
-	
-					dispose();
-					
-					
-					
-				} catch (Exception e2) {
-					JOptionPane.showMessageDialog(null, e2);
+				int action = JOptionPane.showConfirmDialog(null, "Do you want to save?", "Save",JOptionPane.YES_NO_OPTION);
+				if(action==0){
+					try {
+						String query="insert into datebases (Project,Server,Datebase,Username,Password) values (?,?,?,?,?)";
+						PreparedStatement pst=connection.prepareStatement(query);
+						pst.setString(1,textFieldNewProjectName.getText() );
+						pst.setString(2,textFieldNewProjectServer.getText() );
+						pst.setString(3,textFieldNewProjectDatebase.getText() );
+						pst.setString(4,textFieldNewProjectUsername.getText() );
+						pst.setString(5,passwordFieldNewProject.getText() );
+						
+						pst.execute();
+						pst.close();
+						
+						JOptionPane.showMessageDialog(null, "Added new entry.");
+		
+						dispose();
+						
+						
+						
+					} catch (Exception e2) {
+						JOptionPane.showMessageDialog(null, e2);
+					}
 				}
 			}
 		});

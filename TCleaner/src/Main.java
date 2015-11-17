@@ -14,10 +14,11 @@ import java.sql.*;
 public class Main {
 
 	private JFrame TClear;
-	
+	private JList listMain;
 	/**
 	 * Launch the application.
 	 */
+	
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -31,48 +32,54 @@ public class Main {
 		});
 	}
 	
+	
+	
 	Connection connection;
+
 
 	/**
 	 * Create the application.
 	 */
 	
-//	public void loadtList(){
-//		try {
-//			
-//			String query="select * from datebases";
-//			PreparedStatement pst=connection.prepareStatement(query);
-//			ResultSet rs=pst.executeQuery();
-//			
-//			
-//			DefaultListModel DLM=new DefaultListModel();
-//			while(rs.next()){
-//				DLM.addElement(rs.getString("Project"));
-//			}
-//			
-//			listMain.setModel(DLM);
-//			
-//			pst.close();
-//			rs.close();
-//
-//			
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
+	public void loadList(){
+		listMain = new JList();
+		try {
+			
+			String query="select * from datebases";
+			PreparedStatement pst=connection.prepareStatement(query);
+			ResultSet rs=pst.executeQuery();
+			
+			
+			DefaultListModel DLM=new DefaultListModel();
+			while(rs.next()){
+				DLM.addElement(rs.getString("Project"));
+			}
+			
+			listMain.setModel(DLM);
+			
+			pst.close();
+			rs.close();
+
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 	
 	public Main() {
-		initialize();
 		connection=dbconfig.dbConnection();
+		initialize();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-//		UIManager.put("Synthetica.table.useSynthHeaderRenderer", Boolean.TRUE);
+		
+		
+		loadList();
+		
 		try {
-//			UIManager.setLookAndFeel(SyntheticaAluOxideLookAndFeel.class.getName());
 			UIManager.setLookAndFeel(SyntheticaBlackEyeLookAndFeel.class.getName());
 		} catch (Exception lf) {
 			lf.printStackTrace();
@@ -104,15 +111,11 @@ public class Main {
 		btnMainEditProjects.setBounds(10, 155, 170, 30);
 		TClear.getContentPane().add(btnMainEditProjects);
 		
-		JList listMain = new JList();
-		listMain.setBounds(205, 11, 195, 288);
+		listMain.setBounds(190, 11, 210, 288);
 		TClear.getContentPane().add(listMain);
 		
 		JMenuBar menuBarMain = new JMenuBar();
 		TClear.setJMenuBar(menuBarMain);
-		
-//		loadtList();
-		
-		
+
 	}
 }

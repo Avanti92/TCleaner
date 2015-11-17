@@ -28,12 +28,16 @@ import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import javax.swing.JComboBox;
+import javax.swing.DefaultComboBoxModel;
 
 public class ConfProjects extends JFrame {
 
 	private JPanel contentPane;
 	private JTable tableConfProjects;
-	private final JLabel lblConfProjectsBackground = new JLabel("");
+	private JComboBox comboBoxConfProjects;
 
 	/**
 	 * Launch the application.
@@ -50,6 +54,7 @@ public class ConfProjects extends JFrame {
 			}
 		});
 	}
+
 	
 	Connection connection;
 	private JTextField textFieldProject;
@@ -57,10 +62,11 @@ public class ConfProjects extends JFrame {
 	private JTextField textFieldDB;
 	private JTextField textFieldUser;
 	private JPasswordField passwordField;
+	private JTextField SearchFieldConfProjects;
 	/**
 	 * Create the frame.
 	 */
-	public void refreshTable(){
+	public void refreshTable() {
 		try {
 			
 			String query="select * from datebases";
@@ -99,7 +105,8 @@ public class ConfProjects extends JFrame {
 		btnConfProjectNew.setBounds(60, 20, 160, 30);
 		contentPane.add(btnConfProjectNew);
 		
-		JButton btnConfProjectEdit = new JButton("Edit");
+		final JButton btnConfProjectEdit = new JButton("Edit");
+		btnConfProjectEdit.setEnabled(false);
 		btnConfProjectEdit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				EditProject editProj=new EditProject();
@@ -109,27 +116,32 @@ public class ConfProjects extends JFrame {
 		btnConfProjectEdit.setBounds(230, 20, 160, 30);
 		contentPane.add(btnConfProjectEdit);
 		
-		JButton btnConfProjectDelete = new JButton("Delete");
+		final JButton btnConfProjectDelete = new JButton("Delete");
+		btnConfProjectDelete.setEnabled(false);
 		btnConfProjectDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				int row = tableConfProjects.getSelectedRow();
-				String Project_ = (tableConfProjects.getModel() .getValueAt(row, 0)) .toString();
 				
-				try {
+				int action = JOptionPane.showConfirmDialog(null, "Do you want to delete?", "Save",JOptionPane.YES_NO_OPTION);
+				if(action==0){
+					int row = tableConfProjects.getSelectedRow();
+					String Project_ = (tableConfProjects.getModel() .getValueAt(row, 0)) .toString();
 					
-					String query="delete from datebases where Project='"+Project_+"' ";
-					PreparedStatement pst=connection.prepareStatement(query);
+					try {
+						
+						String query="delete from datebases where Project='"+Project_+"' ";
+						PreparedStatement pst=connection.prepareStatement(query);
+						
+						pst.execute();
+						JOptionPane.showMessageDialog(null, "Project Deleted");
+						pst.close();
+	
+						
+					} catch (Exception ex) {
+						JOptionPane.showMessageDialog(null, ex);
+					}
 					
-					pst.execute();
-					JOptionPane.showMessageDialog(null, "Project Deleted");
-					pst.close();
-
-					
-				} catch (Exception ex) {
-					JOptionPane.showMessageDialog(null, ex);
+					refreshTable();		
 				}
-				
-				refreshTable();
 			}
 		});
 		btnConfProjectDelete.setBounds(410, 20, 160, 30);
@@ -146,13 +158,16 @@ public class ConfProjects extends JFrame {
 		
 		JScrollPane scrollPane = new JScrollPane();
 		scrollPane.setViewportBorder(null);
-		scrollPane.setBounds(50, 70, 700, 410);
+		scrollPane.setBounds(50, 120, 700, 410);
 		contentPane.add(scrollPane);
 		
 		tableConfProjects = new JTable();
 		tableConfProjects.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
+				
+				btnConfProjectEdit.setEnabled(true);
+				btnConfProjectDelete.setEnabled(true);
 				
 				int row = tableConfProjects.getSelectedRow();
 				String Project_ = (tableConfProjects.getModel() .getValueAt(row, 0)) .toString();
@@ -171,6 +186,8 @@ public class ConfProjects extends JFrame {
 						passwordField.setText(rs.getString("Password"));
 						
 					}
+
+					pst.close();
 							
 				} catch (Exception ez) {
 					ez.printStackTrace();
@@ -188,31 +205,63 @@ public class ConfProjects extends JFrame {
 		tableConfProjects.setBackground(Color.WHITE);
 		scrollPane.setViewportView(tableConfProjects);
 		
+		SearchFieldConfProjects = new JTextField();
+		SearchFieldConfProjects.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyReleased(KeyEvent arg0) {
+				try {				
+					String selection=(String)comboBoxConfProjects.getSelectedItem();				
+					String query="select Project,Server,Datebase,Username from datebases where '"+selection+"'=? ";
+					PreparedStatement pst=connection.prepareStatement(query);
+					pst.setString(1, SearchFieldConfProjects.getText());
+					ResultSet rs=pst.executeQuery();			
+					
+					tableConfProjects.setModel(DbUtils.resultSetToTableModel(rs));
+//					while (rs.next()) {
+//						
+//					}
+
+					pst.close();
+							
+				} catch (Exception ez) {
+					ez.printStackTrace();
+				}
+				
+			}
+		});
+		SearchFieldConfProjects.setBounds(540, 70, 200, 30);
+		contentPane.add(SearchFieldConfProjects);
+		SearchFieldConfProjects.setColumns(10);
+		
 		textFieldProject = new JTextField();
-		textFieldProject.setBounds(10, 522, 86, 20);
+		textFieldProject.setBounds(10, 580, 86, 20);
 		contentPane.add(textFieldProject);
 		textFieldProject.setColumns(10);
 		
 		textFieldServer = new JTextField();
 		textFieldServer.setColumns(10);
-		textFieldServer.setBounds(144, 522, 86, 20);
+		textFieldServer.setBounds(134, 580, 86, 20);
 		contentPane.add(textFieldServer);
 		
 		textFieldDB = new JTextField();
 		textFieldDB.setColumns(10);
-		textFieldDB.setBounds(274, 522, 86, 20);
+		textFieldDB.setBounds(270, 580, 86, 20);
 		contentPane.add(textFieldDB);
 		
 		textFieldUser = new JTextField();
 		textFieldUser.setColumns(10);
-		textFieldUser.setBounds(412, 522, 86, 20);
+		textFieldUser.setBounds(410, 580, 86, 20);
 		contentPane.add(textFieldUser);
-		lblConfProjectsBackground.setBounds(0, 0, 800, 600);
-		contentPane.add(lblConfProjectsBackground);
 		
 		passwordField = new JPasswordField();
-		passwordField.setBounds(564, 522, 86, 20);
+		passwordField.setBounds(560, 580, 86, 20);
 		contentPane.add(passwordField);
+		
+		comboBoxConfProjects = new JComboBox();
+		comboBoxConfProjects.setToolTipText("Filter for Search Criterias");
+		comboBoxConfProjects.setModel(new DefaultComboBoxModel(new String[] {"Project", "Server", "Datebase", "Table"}));
+		comboBoxConfProjects.setBounds(400, 70, 130, 30);
+		contentPane.add(comboBoxConfProjects);
 		
 		refreshTable();
 		
